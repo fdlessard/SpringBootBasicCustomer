@@ -19,14 +19,14 @@ public class AddressController {
 
     @GetMapping(value = "/isAlive", produces = "application/json")
     public String isAlive() {
-        log.debug("AddressController.isAlive()");
+        log.info("AddressController.isAlive()");
         return "Hello World from AddressController";
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
     @ResponseBody
     public Address get(@PathVariable long id) {
-        log.debug("AddressController.get({})", id);
+        log.info("AddressController.get({})", id);
         return addressService.getAddressById(id);
     }
 

@@ -9,12 +9,10 @@ import java.io.Serializable;
 @Data
 @Builder
 @AllArgsConstructor
-public class Customer implements Serializable {
+public class Product implements Serializable {
 
     private Long id;
-    private String lastName;
-    private String firstName;
-    private String company;
-    private Long addressId;
-    private Long productId;
+    private String name;
+    private String sku;
+    private String description;
 }

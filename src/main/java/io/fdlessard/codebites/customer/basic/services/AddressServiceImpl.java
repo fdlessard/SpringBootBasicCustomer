@@ -21,16 +21,7 @@ public class AddressServiceImpl implements AddressService {
 
         log.debug("AddressServiceImpl.getAddressById({})", id);
 
-        return Address.builder()
-                .id(id)
-                .number("number" + id)
-                .street("street" + id)
-                .city("city" + id)
-                .postalCode("postalCode" + id)
-                .province("province")
-                .country("country" + id)
-                .build();
-
+        return buildAddress(id);
     }
 
 
@@ -44,11 +35,10 @@ public class AddressServiceImpl implements AddressService {
         addresses.add(buildAddress(2L));
 
         return addresses;
-
     }
 
     private Address buildAddress(Long id) {
-        return  Address.builder()
+        return Address.builder()
                 .id(id)
                 .number("number" + id)
                 .street("street" + id)
@@ -58,5 +48,4 @@ public class AddressServiceImpl implements AddressService {
                 .country("country" + id)
                 .build();
     }
-
 }

@@ -20,21 +20,21 @@ public class CustomerController {
 
     @GetMapping(value = "/isAlive", produces = "application/json")
     public String isAlive() {
-        log.debug("CustomerController.isAlive()");
+        log.info("CustomerController.isAlive()");
         return "Hello World from CustomerController";
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
     @ResponseBody
     public Customer get(@PathVariable long id) {
-        log.debug("CustomerController.get({})", id);
+        log.info("CustomerController.get({})", id);
         return customerService.getCustomerById(id);
     }
 
     @GetMapping(value = "/", produces = "application/json")
     @ResponseBody
     public Iterable<Customer> getAll() {
-        log.debug("CustomerController.getAll()");
+        log.info("CustomerController.getAll()");
         return customerService.geAllCustomers();
     }
 }

@@ -19,7 +19,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getCustomerById(long id) {
 
         log.debug("CustomerServiceImpl.get({})", id);
-        return new Customer(id, "lastName" + id, "firstName" + id, "company" + id);
+        return buildCustomer(id);
     }
 
     public List<Customer> geAllCustomers() {
@@ -27,10 +27,21 @@ public class CustomerServiceImpl implements CustomerService {
         log.debug("CustomerController.getAll()");
 
         return Arrays.asList(
-                new Customer(0L, "lastName" + 0, "firstName" + 0, "company" + 0),
-                new Customer(1L, "lastName" + 1, "firstName" + 1, "company" + 1),
-                new Customer(2L, "lastName" + 2, "firstName" + 2, "company" + 2)
+                buildCustomer(0L),
+                buildCustomer(1L),
+                buildCustomer(2L)
         );
+    }
+
+    private Customer buildCustomer(Long id) {
+        return Customer.builder()
+                .id(id)
+                .lastName("lastName" + id)
+                .firstName("firstName" + id)
+                .company("company" + id)
+                .addressId(id + 1)
+                .productId(id + 2)
+                .build();
     }
 
 
