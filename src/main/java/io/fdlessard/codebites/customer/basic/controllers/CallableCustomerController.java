@@ -6,40 +6,36 @@ import io.fdlessard.codebites.customer.basic.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Callable;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/customers")
-public class CustomerController {
-
+@RequestMapping(value = "/customers/callable")
+public class CallableCustomerController {
 
     private CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
+    public CallableCustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
     @GetMapping(value = "/isAlive", produces = "application/json")
-    public String isAlive() {
-        log.info("CustomerController.isAlive()");
-        return "Hello World from CustomerController";
+    public Callable<String> isAlive() {
+        log.info("CallableCustomerController.isAlive()");
+        return () -> "Hello World from CallableCustomerController";
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
     @ResponseBody
-    public Customer get(@PathVariable long id) throws Exception{
-        log.info("CustomerController.get({})", id);
-        if(id % 20 == 0) {
-            throw new Exception();
-        }
-        return customerService.getCustomerById(id);
+    public Callable<Customer>  get(@PathVariable long id) {
+        log.info("CallableCustomerController.get({})", id);
+        return () -> customerService.getCustomerById(id);
     }
 
     @GetMapping(value = "/", produces = "application/json")
     @ResponseBody
     public Iterable<Customer> getAll() {
-        log.info("CustomerController.getAll()");
+        log.info("CallableCustomerController.getAll()");
         return customerService.geAllCustomers();
     }
 }

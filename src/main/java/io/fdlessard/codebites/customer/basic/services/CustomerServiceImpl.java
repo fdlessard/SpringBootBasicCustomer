@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
@@ -19,6 +20,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getCustomerById(long id) {
 
         log.debug("CustomerServiceImpl.get({})", id);
+        pause(1);
         return buildCustomer(id);
     }
 
@@ -31,6 +33,16 @@ public class CustomerServiceImpl implements CustomerService {
                 buildCustomer(1L),
                 buildCustomer(2L)
         );
+    }
+
+    private void pause(int seconds){
+        try {
+            TimeUnit.SECONDS.sleep(seconds);
+
+        } catch (Exception e) {
+
+        }
+
     }
 
     private Customer buildCustomer(Long id) {
