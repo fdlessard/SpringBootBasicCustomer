@@ -19,3 +19,5 @@ ADD ${JAR_FILE} basic-customer.jar
 
 # Run the jar file
 ENTRYPOINT ["java","-Xdebug", "-agentlib:jdwp=transport=dt_socket,address=5005,suspend=n,server=y","-Djava.security.egd=file:/dev/./urandom", "-jar","/basic-customer.jar"]
+
+HEALTHCHECK CMD curl --fail http://localhost:8080/actuator/health || exit 1

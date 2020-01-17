@@ -1,6 +1,12 @@
 # spring-boot-basic-customer
 
 
+#### Endpoints
+
+  - http://localhost:8080/customers/isAlive
+  - http://localhost:8080/customers/1
+  - http://localhost:8080/customers/
+
 #### Creating the docker image
 
   - docker image build . -t basic-customer
