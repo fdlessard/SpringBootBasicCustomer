@@ -18,3 +18,5 @@
 #### Running the docker container
 
   - docker container run -d --name "basic-customer-container" -p 8080:8080 basic-customer
+  - docker inspect basic-customer
+  - docker ps
