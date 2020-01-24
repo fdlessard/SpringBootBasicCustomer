@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping(value = "/customers")
 public class CustomerController {
 
-
     private CustomerService customerService;
 
     public CustomerController(CustomerService customerService) {
@@ -30,9 +29,6 @@ public class CustomerController {
     @ResponseBody
     public Customer get(@PathVariable long id) throws Exception{
         log.info("CustomerController.get({})", id);
-        if(id % 20 == 0) {
-            throw new Exception();
-        }
         return customerService.getCustomerById(id);
     }
 

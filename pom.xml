@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.fdlessard.codebites.customer</groupId>
-    <artifactId>customer</artifactId>
+    <artifactId>basic-customer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>customer</name>
+    <name>basic-customer</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -38,6 +38,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 
