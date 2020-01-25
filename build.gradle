@@ -4,12 +4,29 @@ plugins {
     id 'java'
     id 'eclipse' // optional, for Eclipse project
     id 'idea'	 // optional, for IntelliJ IDEA project
+    id 'jacoco'
+    id 'checkstyle'
+    id 'pmd'
+    id "org.owasp.dependencycheck" version "5.3.0"
+
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 group = 'io.fdlessard.codebites.customer'
 archivesBaseName = 'customer'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+targetCompatibility = '11'
+
 
 repositories {
     mavenCentral()
@@ -17,21 +34,112 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    runtimeClasspath "org.springframework.boot:spring-boot-devtools"
-    compileOnly 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly "org.springframework.boot:spring-boot-devtools"
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.2.0')
-    testCompile('org.junit.jupiter:junit-jupiter-params:5.2.0')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.0')
-    testCompile "org.mockito:mockito-core:2.+"
-    testCompile('org.mockito:mockito-junit-jupiter:2.18.3')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    testImplementation "org.mockito:mockito-core:2.+"
+    testImplementation('org.mockito:mockito-junit-jupiter:2.18.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+jacoco {
+    toolVersion = "0.8.5"
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
+
+        rule {
+            enabled = false
+            element = 'CLASS'
+            includes = ['org.gradle.*']
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 0.3
+            }
+        }
+    }
+}
+
+checkstyle {
+    toolVersion '8.28'
+    configFile file("checkstyle.xml")
+}
+
+pmd {
+    ignoreFailures = true
+}
+
+sourceSets {
+    integrationTest {
+        java.srcDir 'src/it/java'
+        resources.srcDir 'src/it/resources'
+        compileClasspath += sourceSets.main.output + configurations.testCompileClasspath
+        runtimeClasspath += output + compileClasspath + configurations.testRuntimeClasspath
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    description = 'Runs the integration tests.'
+    group = 'verification'
+    outputs.upToDateWhen { false }
+    mustRunAfter test
+    check.dependsOn integrationTest // if you only want unit test, comment
+    //dependsOn jar
+
+    testLogging {
+        exceptionFormat = 'full'
+        showExceptions true
+        showCauses true
+        showStackTraces true
+        events 'passed', "skipped", 'failed', 'standardError', 'standardOut'
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "\nIntegration Test result: ${result.resultType}"
+            println "Test summary: ${result.testCount} tests, " +
+                    "${result.successfulTestCount} succeeded, " +
+                    "${result.failedTestCount} failed, " +
+                    "${result.skippedTestCount} skipped"
+        }
+    }
 }
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
+    testLogging {
+        exceptionFormat = 'full'
+        showExceptions true
+        showCauses true
+        showStackTraces true
+        events 'passed', "skipped", 'failed', 'standardError', 'standardOut'
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "\nUnit Test result: ${result.resultType}"
+            println "Test summary: ${result.testCount} tests, " +
+                    "${result.successfulTestCount} succeeded, " +
+                    "${result.failedTestCount} failed, " +
+                    "${result.skippedTestCount} skipped"
+        }
+    }
 }

@@ -13,13 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-  public CustomerServiceImpl() {
-  }
-
   public Customer getCustomerById(long id) {
 
     log.debug("CustomerServiceImpl.get({})", id);
-    pause(1);
     return buildCustomer(id);
   }
 
